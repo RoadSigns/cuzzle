@@ -7,7 +7,7 @@
   </coverage>
   <testsuites>
     <testsuite name="cuzzle">
-      <directory>tests</directory>
+      <directory>tests/Unit</directory>
     </testsuite>
   </testsuites>
 </phpunit>
