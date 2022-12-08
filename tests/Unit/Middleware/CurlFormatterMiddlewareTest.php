@@ -1,9 +1,11 @@
 <?php
 
+namespace unit\Middleware;
+
 use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Handler\MockHandler;
 use Namshi\Cuzzle\Middleware\CurlFormatterMiddleware;
 
 class CurlFormatterMiddlewareTest extends \PHPUnit\Framework\TestCase

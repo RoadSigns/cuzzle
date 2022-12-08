@@ -3,8 +3,8 @@
 namespace Namshi\Cuzzle\Middleware;
 
 use Namshi\Cuzzle\Formatter\CurlFormatter;
-use Psr\Log\LoggerInterface;
 use Psr\Http\Message\RequestInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class CurlFormatterMiddleware middleware
