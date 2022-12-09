@@ -1,30 +1,33 @@
 <?php
 
-namespace Namshi\Cuzzle\Middleware;
+declare(strict_types=1);
 
-use Namshi\Cuzzle\Formatter\CurlFormatter;
+namespace RoadSigns\Cuzzle\Middleware;
+
+use Closure;
 use Psr\Http\Message\RequestInterface;
 use Psr\Log\LoggerInterface;
+use RoadSigns\Cuzzle\Formatter\CurlFormatter;
 
 /**
  * Class CurlFormatterMiddleware middleware
- * it allow to attach the CurlFormatter to a Guzzle Request
- *
- * @package Namshi\Cuzzle\Middleware
+ * it allows to attach the CurlFormatter to a Guzzle Request
  */
-class CurlFormatterMiddleware
+final class CurlFormatterMiddleware
 {
-    protected $logger;
+    private LoggerInterface $logger;
 
     public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
 
-    public function __invoke(callable $handler)
+    public function __invoke(callable $handler): Closure
     {
         return function (RequestInterface $request, array $options) use ($handler) {
-            $curlCommand = (new CurlFormatter())->format($request, $options);
+            $curlCommand = (new CurlFormatter())
+                ->format($request, $options)
+                ->toString();
             $this->logger->debug($curlCommand);
 
             return $handler($request, $options);

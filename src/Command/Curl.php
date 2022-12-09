@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace RoadSigns\Cuzzle\Command;
 
-use RoadSigns\Cuzzle\Command\CommandInterface;
+use Stringable;
 
-final class Curl implements CommandInterface
+final class Curl implements Stringable
 {
     private string $command;
 
     private array $options;
 
-    private int $currentLineLength;
+    private string $method;
 
     private string $url;
 
     public function __construct()
     {
         $this->command = 'curl';
+        $this->method = 'GET';
         $this->options = [];
     }
 
@@ -42,18 +43,10 @@ final class Curl implements CommandInterface
         return $this;
     }
 
-
-    public function setCommandLineLength($commandLineLength)
+    public function addMethod(string $method): self
     {
-        $this->commandLineLength = $commandLineLength;
-    }
-
-    public function toString(): string
-    {
-        $command = $this->command;
-        $command = $this->addUrlToCommand($command);
-        $command = $this->addOptionsToCommand($command);
-        return $command;
+        $this->method = $method;
+        return $this;
     }
 
     private function addOptionsToCommand(string $command): string
@@ -61,7 +54,7 @@ final class Curl implements CommandInterface
         $options = $this->options;
         ksort($options);
 
-        if ($this->options) {
+        if (count($this->options)) {
             foreach ($this->options as $name => $value) {
                 if (is_array($value)) {
                     foreach ($value as $subValue) {
@@ -85,5 +78,27 @@ final class Curl implements CommandInterface
     private function addUrlToCommand(string $command): string
     {
         return $command . " " . escapeshellarg($this->url);
+    }
+
+    private function addMethodToCommand(string $command): string
+    {
+        if ('GET' === $this->method) {
+            return $command;
+        }
+
+        $command .= 'HEAD' === $this->method
+            ? ' --head'
+            : ' -X ' . $this->method;
+
+        return $command;
+    }
+
+    public function __toString(): string
+    {
+        $command = $this->command;
+        $command = $this->addMethodToCommand($command);
+        $command = $this->addUrlToCommand($command);
+        $command = $this->addOptionsToCommand($command);
+        return $command;
     }
 }

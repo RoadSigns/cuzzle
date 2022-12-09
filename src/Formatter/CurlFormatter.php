@@ -7,16 +7,15 @@ namespace RoadSigns\Cuzzle\Formatter;
 use GuzzleHttp\Cookie\CookieJarInterface;
 use GuzzleHttp\Cookie\SetCookie;
 use Psr\Http\Message\RequestInterface;
-use RoadSigns\Cuzzle\Command\CommandInterface;
 use RoadSigns\Cuzzle\Command\Curl;
+use Stringable;
 
 /**
  * Class CurlFormatter it formats a Guzzle request to a cURL shell command
- * @package Namshi\Cuzzle\Formatter
  */
 final class CurlFormatter implements FormatterInterface
 {
-    public function format(RequestInterface $request, array $options = []): CommandInterface
+    public function format(RequestInterface $request, array $options = []): Stringable
     {
         $curl = new Curl();
 
@@ -31,13 +30,7 @@ final class CurlFormatter implements FormatterInterface
 
     private function extractHttpMethodArgument(RequestInterface $request, Curl $curl): void
     {
-        if ('GET' !== $request->getMethod()) {
-            if ('HEAD' === $request->getMethod()) {
-                $curl->addOption('-head');
-            } else {
-                $curl->addOption('X', $request->getMethod());
-            }
-        }
+        $curl->addMethod($request->getMethod());
     }
 
     private function extractBodyArgument(RequestInterface $request, Curl $curl): void
@@ -57,14 +50,14 @@ final class CurlFormatter implements FormatterInterface
         }
 
         if ($contents) {
+            //if get request has data Add G otherwise curl will make a post request
+            if ('GET' === $request->getMethod()) {
+                $curl->addOption('G');
+            }
+
             // clean input of null bytes
             $contents = str_replace(chr(0), '', $contents);
             $curl->addOption('d', escapeshellarg($contents));
-        }
-
-        //if get request has data Add G otherwise curl will make a post request
-        if (!empty($this->options['d']) && ('GET' === $request->getMethod())) {
-            $curl->addOption('G');
         }
     }
 
