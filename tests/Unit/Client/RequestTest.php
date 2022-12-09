@@ -24,16 +24,16 @@ final class RequestTest extends TestCase
     {
         $request = new Request('GET', 'http://local.example');
         $jar = CookieJar::fromArray(['Foo' => 'Bar', 'identity' => 'xyz'], 'local.example');
-        $curl = $this->curlFormatter->format($request, ['cookies' => $jar]);
+        $curl = (string) $this->curlFormatter->format($request, ['cookies' => $jar]);
 
-        $this->assertStringNotContainsString("-H 'Host: local.example'", $curl);
-        $this->assertStringContainsString("-b 'Foo=Bar; identity=xyz'", $curl);
+        $this->assertStringNotContainsString("-H 'Host: local.example'", (string) $curl);
+        $this->assertStringContainsString("-b 'Foo=Bar; identity=xyz'", (string) $curl);
     }
 
     public function testPOST(): void
     {
         $request = new Request('POST', 'http://local.example', [], 'foo=bar&hello=world');
-        $curl = $this->curlFormatter->format($request)->toString();
+        $curl = (string) $this->curlFormatter->format($request);
 
         $this->assertStringContainsString("-d 'foo=bar&hello=world'", $curl);
     }
@@ -41,7 +41,7 @@ final class RequestTest extends TestCase
     public function testPUT()
     {
         $request = new Request('PUT', 'http://local.example', [], 'foo=bar&hello=world');
-        $curl = $this->curlFormatter->format($request)->toString();
+        $curl = (string) $this->curlFormatter->format($request);
 
         $this->assertStringContainsString("-d 'foo=bar&hello=world'", $curl);
         $this->assertStringContainsString('-X PUT', $curl);
@@ -50,7 +50,7 @@ final class RequestTest extends TestCase
     public function testDELETE()
     {
         $request = new Request('DELETE', 'http://local.example');
-        $curl = $this->curlFormatter->format($request)->toString();
+        $curl = (string) $this->curlFormatter->format($request);
 
         $this->assertSame("curl -X DELETE 'http://local.example'", $curl);
     }
@@ -58,7 +58,7 @@ final class RequestTest extends TestCase
     public function testHEAD()
     {
         $request = new Request('HEAD', 'http://local.example');
-        $curl = $this->curlFormatter->format($request)->toString();
+        $curl = (string) $this->curlFormatter->format($request);
 
         $this->assertSame("curl --head 'http://local.example'", $curl);
     }
@@ -66,7 +66,7 @@ final class RequestTest extends TestCase
     public function testOPTIONS()
     {
         $request = new Request('OPTIONS', 'http://local.example');
-        $curl = $this->curlFormatter->format($request)->toString();
+        $curl = (string) $this->curlFormatter->format($request);
 
         $this->assertStringContainsString('-X OPTIONS', $curl);
     }

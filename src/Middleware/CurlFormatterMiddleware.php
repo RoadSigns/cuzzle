@@ -26,8 +26,7 @@ final class CurlFormatterMiddleware
     {
         return function (RequestInterface $request, array $options) use ($handler) {
             $curlCommand = (new CurlFormatter())
-                ->format($request, $options)
-                ->toString();
+                ->format($request, $options);
             $this->logger->debug($curlCommand);
 
             return $handler($request, $options);
