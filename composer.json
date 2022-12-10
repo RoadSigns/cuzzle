@@ -9,7 +9,8 @@
   "require-dev": {
     "roave/security-advisories": "dev-latest",
     "phpunit/phpunit": "^9.3.8",
-    "symplify/easy-coding-standard": "^11.1"
+    "symplify/easy-coding-standard": "^11.1",
+    "phpstan/phpstan": "^1.9"
   },
   "autoload": {
     "psr-4": {
