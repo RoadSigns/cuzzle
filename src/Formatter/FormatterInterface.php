@@ -8,5 +8,9 @@ use Stringable;
 
 interface FormatterInterface
 {
+    /**
+     * @param RequestInterface $request
+     * @param array<string, mixed> $options
+     */
     public function format(RequestInterface $request, array $options = []): Stringable;
 }

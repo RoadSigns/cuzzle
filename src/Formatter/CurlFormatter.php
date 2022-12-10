@@ -15,6 +15,11 @@ use Stringable;
  */
 final class CurlFormatter implements FormatterInterface
 {
+    /**
+     * @param RequestInterface $request
+     * @param array<string, mixed> $options
+     * @return Curl
+     */
     public function format(RequestInterface $request, array $options = []): Stringable
     {
         $curl = new Curl();
@@ -61,6 +66,12 @@ final class CurlFormatter implements FormatterInterface
         }
     }
 
+    /**
+     * @param RequestInterface $request
+     * @param array<string, mixed> $options
+     * @param Curl $curl
+     * @return void
+     */
     private function extractCookiesArgument(RequestInterface $request, array $options, Curl $curl): void
     {
         if (!isset($options['cookies']) || !$options['cookies'] instanceof CookieJarInterface) {
@@ -98,7 +109,7 @@ final class CurlFormatter implements FormatterInterface
             }
 
             foreach ($header as $headerValue) {
-                $curl->addOption('H', escapeshellarg("{$name}: {$headerValue}"));
+                $curl->addHeader($name, $headerValue);
             }
         }
     }

@@ -17,14 +17,6 @@ final class CurlFormatterTest extends TestCase
         $this->curlFormatter = new CurlFormatter();
     }
 
-    public function testMultiLineDisabled()
-    {
-        $request = new Request('GET', 'http://example.local', ['foo' => 'bar']);
-        $curl = $this->curlFormatter->format($request);
-
-        $this->assertEquals(substr_count($curl, "\n"), 2);
-    }
-
     public function testSkipHostInHeaders()
     {
         $request = new Request('GET', 'http://example.local');

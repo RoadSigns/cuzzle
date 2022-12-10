@@ -10,7 +10,11 @@ final class Curl implements Stringable
 {
     private string $command;
 
+    /** @var array<string, mixed> */
     private array $options;
+
+    /** @var array<string, mixed> */
+    private array $headers;
 
     private string $method;
 
@@ -20,6 +24,7 @@ final class Curl implements Stringable
     {
         $this->command = 'curl';
         $this->method = 'GET';
+        $this->headers = [];
         $this->options = [];
     }
 
@@ -38,8 +43,13 @@ final class Curl implements Stringable
 
     public function addUrl(string $url): self
     {
-        var_dump($url);
         $this->url = $url;
+        return $this;
+    }
+
+    public function addHeader(string $name, string $value): self
+    {
+        $this->headers[$name] = $value;
         return $this;
     }
 
@@ -93,11 +103,24 @@ final class Curl implements Stringable
         return $command;
     }
 
+    private function addHeadersToCommand(string $command): string
+    {
+        if (count($this->headers)) {
+            foreach ($this->headers as $name => $value) {
+                $header = escapeshellarg("{$name}: {$value}");
+                $command = $this->addCommandPart($command, "-H $header");
+            }
+        }
+
+        return $command;
+    }
+
     public function __toString(): string
     {
         $command = $this->command;
         $command = $this->addMethodToCommand($command);
         $command = $this->addUrlToCommand($command);
+        $command = $this->addHeadersToCommand($command);
         $command = $this->addOptionsToCommand($command);
         return $command;
     }
