@@ -60,13 +60,16 @@ final class CurlFormatterTest extends TestCase
         $curl = $this->curlFormatter->format($request);
 
         $this->assertEquals("curl 'http://example.local?foo=bar'", $curl);
+    }
 
-        $body = http_build_query(['foo' => 'bar', 'hello' => 'world'], '', '&');
+    public function testGETWithBody()
+    {
+        $body = ['foo' => 'bar', 'hello' => 'world'];
 
-        $request = new Request('GET', 'http://example.local', [], $body);
+        $request = new Request('GET', 'http://example.local', [], json_encode($body));
         $curl = $this->curlFormatter->format($request);
 
-        $this->assertEquals("curl 'http://example.local' -G  -d 'foo=bar&hello=world'", $curl);
+        $this->assertEquals("curl 'http://example.local' -G -d '{\"foo\":\"bar\",\"hello\":\"world\"}'", (string) $curl);
     }
 
     public function testPOST()

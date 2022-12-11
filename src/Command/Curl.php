@@ -68,10 +68,16 @@ final class Curl implements Stringable
             foreach ($this->options as $name => $value) {
                 if (is_array($value)) {
                     foreach ($value as $subValue) {
-                        $command = $this->addCommandPart($command, "-{$name} {$subValue}");
+                        $subValue = escapeshellarg($subValue);
+                        $command = $this->addCommandPart($command, "--{$name} {$subValue}");
                     }
                 } else {
-                    $command = $this->addCommandPart($command, "-{$name} {$value}");
+                    if (empty($value)) {
+                        $command = $this->addCommandPart($command, "-{$name}");
+                    } else {
+                        $value = escapeshellarg($value);
+                        $command = $this->addCommandPart($command, "-{$name} {$value}");
+                    }
                 }
             }
         }

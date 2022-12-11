@@ -28,7 +28,7 @@ final class CurlTest extends TestCase
 
     public function testSimpleGETWithMultipleHeader()
     {
-$curl = new Curl();
+        $curl = new Curl();
         $curl->addMethod('GET');
         $curl->addUrl('http://example.local');
         $curl->addHeader('foo', 'bar');
@@ -70,89 +70,98 @@ $curl = new Curl();
         $curl->addUrl('http://example.local?foo=bar');
         $curl->addHeader('foo', 'bar');
         $curl->addHeader('Accept-Encoding', 'gzip,deflate,sdch');
-        $curl->addBody('{"foo":"bar"}');
+        $curl->addOption('d', '{"foo":"bar"}');
         $this->assertEquals("curl 'http://example.local?foo=bar' -H 'foo: bar' -H 'Accept-Encoding: gzip,deflate,sdch' -d '{\"foo\":\"bar\"}'", (string) $curl);
     }
 
     public function testPOST()
     {
-        $this->markTestIncomplete('TODO');
+        $curl = new Curl();
+        $curl->addMethod('POST');
+        $curl->addUrl('http://example.local');
+        $this->assertEquals("curl -X POST 'http://example.local'", (string) $curl);
     }
 
     public function testPOSTWithHeader()
     {
-        $this->markTestIncomplete('TODO');
+        $curl = new Curl();
+        $curl->addMethod('POST');
+        $curl->addUrl('http://example.local');
+        $curl->addHeader('foo', 'bar');
+        $this->assertEquals("curl -X POST 'http://example.local' -H 'foo: bar'", (string) $curl);
     }
 
     public function testPOSTWithMultipleHeader()
     {
-        $this->markTestIncomplete('TODO');
+        $curl = new Curl();
+        $curl->addMethod('POST');
+        $curl->addUrl('http://example.local');
+        $curl->addHeader('foo', 'bar');
+        $curl->addHeader('Accept-Encoding', 'gzip,deflate,sdch');
+        $this->assertEquals("curl -X POST 'http://example.local' -H 'foo: bar' -H 'Accept-Encoding: gzip,deflate,sdch'", (string) $curl);
     }
 
     public function testPOSTWithMultipleHeaderAndBody()
     {
-        $this->markTestIncomplete('TODO');
+        $curl = new Curl();
+        $curl->addMethod('POST');
+        $curl->addUrl('http://example.local');
+        $curl->addHeader('foo', 'bar');
+        $curl->addHeader('Accept-Encoding', 'gzip,deflate,sdch');
+        $curl->addOption('d', '{"foo":"bar"}');
+        $this->assertEquals("curl -X POST 'http://example.local' -H 'foo: bar' -H 'Accept-Encoding: gzip,deflate,sdch' -d '{\"foo\":\"bar\"}'", (string) $curl);
     }
 
     public function testPUT()
     {
-        $this->markTestIncomplete('TODO');
+        $curl = new Curl();
+        $curl->addMethod('PUT');
+        $curl->addUrl('http://example.local');
+        $this->assertEquals("curl -X PUT 'http://example.local'", (string) $curl);
     }
 
     public function testPUTWithHeader()
     {
-        $this->markTestIncomplete('TODO');
+        $curl = new Curl();
+        $curl->addMethod('PUT');
+        $curl->addUrl('http://example.local');
+        $curl->addHeader('foo', 'bar');
+        $this->assertEquals("curl -X PUT 'http://example.local' -H 'foo: bar'", (string) $curl);
     }
 
     public function testPUTWithMultipleHeader()
     {
-        $this->markTestIncomplete('TODO');
-    }
-
-    public function testPUTWithMultipleHeaderAndBody()
-    {
-        $this->markTestIncomplete('TODO');
+        $curl = new Curl();
+        $curl->addMethod('PUT');
+        $curl->addUrl('http://example.local');
+        $curl->addHeader('foo', 'bar');
+        $curl->addHeader('Accept-Encoding', 'gzip,deflate,sdch');
+        $this->assertEquals("curl -X PUT 'http://example.local' -H 'foo: bar' -H 'Accept-Encoding: gzip,deflate,sdch'", (string) $curl);
     }
 
     public function testDELETE()
     {
-        $this->markTestIncomplete('TODO');
-    }
-
-    public function testDELETEWithHeader()
-    {
-        $this->markTestIncomplete('TODO');
-    }
-
-    public function testDELETEWithMultipleHeader()
-    {
-        $this->markTestIncomplete('TODO');
-    }
-
-    public function testDELETEWithMultipleHeaderAndBody()
-    {
-        $this->markTestIncomplete('TODO');
+        $curl = new Curl();
+        $curl->addMethod('DELETE');
+        $curl->addUrl('http://example.local');
+        $this->assertEquals("curl -X DELETE 'http://example.local'", (string) $curl);
     }
 
     public function testHEAD()
     {
-        $this->markTestIncomplete('TODO');
+        $curl = new Curl();
+        $curl->addMethod('HEAD');
+        $curl->addUrl('http://example.local');
+        $this->assertEquals("curl --head 'http://example.local'", (string) $curl);
     }
 
-    public function testHEADWithHeader()
-    {
-        $this->markTestIncomplete('TODO');
-    }
-
-    public function testHEADWithMultipleHeader()
-    {
-        $this->markTestIncomplete('TODO');
-    }
-
-    public function testAddOption()
+    public function testMultipleOptionsWithSameName()
     {
         $curl = new Curl();
-        $curl->addOption('foo', 'bar');
-        $this->assertEquals(['foo' => 'bar'], $curl->getOptions());
+        $curl->addMethod('GET');
+        $curl->addUrl('http://example.local');
+        $curl->addOption('test', 'foo');
+        $curl->addOption('test', 'bar');
+        $this->assertEquals("curl 'http://example.local' --test 'foo' --test 'bar'", (string) $curl);
     }
 }

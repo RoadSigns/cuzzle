@@ -62,7 +62,7 @@ final class CurlFormatter implements FormatterInterface
 
             // clean input of null bytes
             $contents = str_replace(chr(0), '', $contents);
-            $curl->addOption('d', escapeshellarg($contents));
+            $curl->addOption('d', $contents);
         }
     }
 
@@ -92,7 +92,7 @@ final class CurlFormatter implements FormatterInterface
         }
 
         if ($values) {
-            $curl->addOption('b', escapeshellarg(implode('; ', $values)));
+            $curl->addOption('b', implode('; ', $values));
         }
     }
 
@@ -104,7 +104,7 @@ final class CurlFormatter implements FormatterInterface
             }
 
             if ('user-agent' === strtolower($name)) {
-                $curl->addOption('A', escapeshellarg($header[0]));
+                $curl->addOption('A', $header[0]);
                 continue;
             }
 
