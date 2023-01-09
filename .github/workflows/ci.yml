@@ -4,7 +4,15 @@ on: [push]
 
 jobs:
   Unit-Tests:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-latest]
+        php: [ 8.0, 8.1, 8.2 ]
+        stability: [prefer-lowest, prefer-stable]
+
+    name: Unit-Tests - ${{ matrix.php }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v2
@@ -12,19 +20,27 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.0'
+          php-version: ${{ matrix.php }}
           extensions: json
           tools: composer:v2
           coverage: none
 
       - name: Run composer install
-        run: composer install -n --prefer-dist
+        run: composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: Run PHPUnit
         run: ./vendor/bin/phpunit
 
   Coding-Standards:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ ubuntu-latest ]
+        php: [ 8.0, 8.1, 8.2 ]
+        stability: [ prefer-lowest, prefer-stable ]
+
+    name: Coding-Standards - ${{ matrix.php }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v2
@@ -32,19 +48,28 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.0'
+          php-version: ${{ matrix.php }}
           extensions: json
           tools: composer:v2
           coverage: none
 
       - name: Run composer install
-        run: composer install -n --prefer-dist
+        run: composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: Run ECS
         run: ./vendor/bin/ecs check src tests
 
   PHPStan:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ ubuntu-latest ]
+        php: [ 8.0, 8.1, 8.2 ]
+        stability: [ prefer-lowest, prefer-stable ]
+
+    name: PHPStan - ${{ matrix.php }} - ${{ matrix.stability }} - ${{ matrix.os }}
+
 
     steps:
       - uses: actions/checkout@v2
@@ -52,13 +77,13 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.0'
+          php-version: ${{ matrix.php }}
           extensions: json
           tools: composer:v2
           coverage: none
 
       - name: Run composer install
-        run: composer install -n --prefer-dist
+        run: composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: Run ECS
         run: ./vendor/bin/phpstan analyse src --level 8

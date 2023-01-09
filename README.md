@@ -4,9 +4,7 @@ This library lets you dump a Guzzle request to a cURL command for debug and log 
 
 ## Prerequisites
 
-This library needs PHP 7.3+.
-
-It has been tested using PHP7.3 to PHP7.4
+This library needs PHP 8.0+
 
 ## Installation
 
@@ -65,6 +63,16 @@ You can run tests locally with
 phpunit
 ```
 
+## Original
+
+This package is a fork from https://github.com/namshi/cuzzle
+This is to allow people to use this package with Guzzle >= 7.0
+
+Some fundamental changes have been made to the code so a simple port across might not work exactly.
+
+We are now returning a `Curl` class that is `Stringable` instead of a string.
+This allows us to move all the logic to create the cURL out of the Request formatter.
+
 ## Feedback
 
-Add an issue, open a PR, drop us an email! We would love to hear from you!
+Add an issue, open a PR, drop us a message!
