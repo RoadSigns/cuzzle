@@ -4,7 +4,7 @@
   "require": {
     "php": ">=8.0",
     "guzzlehttp/guzzle": "^7.0",
-    "psr/log": "^1.0"
+    "psr/log": "^3.0"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
